@@ -25,7 +25,6 @@ const multer = require("multer");
 const { storage } = require("./cloudConfig.js");
 const upload = multer({ storage });
 
-// const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust"; 
 const dbUrl = process.env.ATLASDB_URL;
 
 main()
