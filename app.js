@@ -22,10 +22,10 @@ const User = require("./models/user.js");
 const userRouter = require("./routes/user.js");
 const { isLoggedIn } = require("./middleware.js");
 const multer = require("multer");
-const upload = multer({dest: "uploads/"});
-const  {storage} = require("./cloudConfig.js");
+const { storage } = require("./cloudConfig.js");
+const upload = multer({ storage });
 
-// const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust"; 
+const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust"; 
 const dbUrl = process.env.ATLASDB_URL;
 
 main()
@@ -137,13 +137,30 @@ app.get(
   })
 );
 
+// app.post(
+//   "/listings",
+//   validateListing,
+//   wrapAsync(async (req, res) => {
+//     const newListing = new Listing({
+//       ...req.body.listing,
+//       image: { url: req.body.listing.image },
+//     });
+
+//     await newListing.save();
+//     req.flash("success", "New Listing Created!");
+//     res.redirect("/listings");
+//   })
+// );
+
 app.post(
   "/listings",
+  upload.single("listing[image]"),
   validateListing,
   wrapAsync(async (req, res) => {
+
     const newListing = new Listing({
       ...req.body.listing,
-      image: { url: req.body.listing.image },
+      image: { url: req.file.path },
     });
 
     await newListing.save();
